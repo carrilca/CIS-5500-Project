@@ -1,0 +1,9 @@
+{
+  "rds_host": "ccarrildb.c18woy8805xt.us-east-2.rds.amazonaws.com",
+  "rds_port": "3306",
+  "rds_user": "ccarril",
+  "rds_password": "cis550DB_10-23",
+  "rds_db": "SWIFTIFY",
+  "server_host": "localhost",
+  "server_port": "8080"
+}
