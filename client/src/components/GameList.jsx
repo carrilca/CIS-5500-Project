@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
+// table with list of games -- most recent games first
 const GameList = ({ games }) => {
 	return (
 		<TableContainer component={Paper}>

@@ -29,6 +29,10 @@ const game = {
 	],
 };
 
+// TODO: game detail page
+// clicking on the player should take you to the player detail page
+// show card for each of the players in the video player page
+
 const GameDetailPage = () => {
 	return (
 		<Card>

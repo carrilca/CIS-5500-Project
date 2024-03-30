@@ -1,12 +1,12 @@
 import { TabContext, TabPanel } from '@mui/lab';
 import {
-	Box,
-	Card,
-	CardContent,
-	Grid,
-	Tab,
-	Tabs,
-	Typography,
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -25,6 +25,11 @@ const player = {
 	],
 };
 
+// remove player out
+// Video game stats
+// Stats for real life games
+// personal info
+// graphs
 const PlayerPage = () => {
 	const [value, setValue] = useState('1');
 
