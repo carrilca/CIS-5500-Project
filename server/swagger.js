@@ -4,9 +4,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Your API Title',
+      title: 'Title',
       version: '1.0.0',
-      description: 'API documentation for your Node.js application',
+      description: 'API documentation for our application',
     },
   },
   apis: ['server.js'], // Path to the API routes
