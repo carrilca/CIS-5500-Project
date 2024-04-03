@@ -148,50 +148,54 @@ const get_game_details = async function(req, res) {
   // Here is a complete example of how to query the database in JavaScript.
   // Only a small change (unrelated to querying) is required for TASK 3 in this route.
   connection.query(`
-    
+  SELECT c.game_event_id, c.club_id, c.type, c.minute, c.player_id
+  FROM ClubGoals c
+  WHERE c.game_id = ${game_id};
   `, (err, data) => {
     if (err || data.length === 0) {
-      // If there is an error for some reason, or if the query is empty (this should not be possible)
-      // print the error message and return an empty object instead
       console.log(err);
-      // Be cognizant of the fact we return an empty object {}. For future routes, depending on the
-      // return type you may need to return an empty array [] instead.
       res.json({});
     } else {
-      // Here, we return results of the query as an object, keeping only relevant data
-      // being song_id and title which you will add. In this case, there is only one song
-      // so we just directly access the first element of the query results array (data)
-      // TODO (TASK 3): also return the song title in the response
-      res.json({
-        //response
-      });
+      res.json(data);
     }
   });
 }
 
 // Route 4: GET /get_detailed_player_info
+const get_basic_player_info = async function(req, res) {
+  const player_id = req.query.player_id;
+
+  connection.query(`
+  SELECT p.year, p.overall, p.age, p2.name, p.jersey_number, pc.country
+  FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
+  WHERE p2.id = ${player_id}
+  ORDER BY p.year DESC;
+  `, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json({
+      });
+    }
+  });
+}
+
+// Route 5: GET /get_detailed_player_info
 const get_detailed_player_info = async function(req, res) {
   const player_id = req.query.player_id;
 
-  // Here is a complete example of how to query the database in JavaScript.
-  // Only a small change (unrelated to querying) is required for TASK 3 in this route.
   connection.query(`
-    
+  SELECT p.year, p.overall, p.age, p2.name, p.jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, , pc.country
+  FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
+  WHERE p2.id = ${player_id}
+  ORDER BY p.year DESC;
   `, (err, data) => {
     if (err || data.length === 0) {
-      // If there is an error for some reason, or if the query is empty (this should not be possible)
-      // print the error message and return an empty object instead
       console.log(err);
-      // Be cognizant of the fact we return an empty object {}. For future routes, depending on the
-      // return type you may need to return an empty array [] instead.
       res.json({});
     } else {
-      // Here, we return results of the query as an object, keeping only relevant data
-      // being song_id and title which you will add. In this case, there is only one song
-      // so we just directly access the first element of the query results array (data)
-      // TODO (TASK 3): also return the song title in the response
       res.json({
-        //response
       });
     }
   });
@@ -202,5 +206,6 @@ module.exports = {
   get_players_by_country_or_region,
   get_clubs_by_country_or_region,
   get_game_details,
+  get_basic_player_info,
   get_detailed_player_info,
 }
