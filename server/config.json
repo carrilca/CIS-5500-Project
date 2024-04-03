@@ -1,9 +1,9 @@
 {
-  "rds_host": "ccarrildb.c18woy8805xt.us-east-2.rds.amazonaws.com",
+  "rds_host": "database-1.c3vqulawmibi.us-east-1.rds.amazonaws.com",
   "rds_port": "3306",
-  "rds_user": "ccarril",
-  "rds_password": "cis550DB_10-23",
-  "rds_db": "SWIFTIFY",
+  "rds_user": "FIFA_group",
+  "rds_password": "SQLUnitedFC",
+  "rds_db": "CIS5500_FINAL_PROJECT",
   "server_host": "localhost",
   "server_port": "8080"
 }

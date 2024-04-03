@@ -57,6 +57,24 @@ app.get('/get_recent_games', routes.get_recent_games);
 
 /**
  * @swagger
+ * /get_game_scores:
+ *   get:
+ *     summary: Get the score for a particular game
+ *     parameters:
+ *          - in: query
+ *            name: game_id
+ *            type: int
+ *            required: true
+ *            description: game_id
+ *     description: Retrieve a the score of a game based on id.
+ *     responses:
+ *       200:
+ *         description: Successful response with a list of players.
+ */
+app.get('/get_game_scores', routes.get_game_scores);
+
+/**
+ * @swagger
  * /get_players_by_country_or_region:
  *   get:
  *     summary: Get a list of players by country or region
