@@ -57,6 +57,25 @@ app.get('/get_recent_games', routes.get_recent_games);
 
 /**
  * @swagger
+ * /get_game_scores:
+ *   get:
+ *     summary: Get the score for a particular game
+ *     parameters:
+ *          - in: query
+ *            name: game_id
+ *            type: int
+ *            required: true
+ *            description: game_id
+ *     description: Retrieve a the score of a game based on id.
+ *     responses:
+ *       200:
+ *         description: Successful response with a list of players.
+ */
+app.get('/get_game_scores', routes.get_game_scores);
+
+
+/**
+ * @swagger
  * /get_players_by_country_or_region:
  *   get:
  *     summary: Get a list of players by country or region
@@ -101,6 +120,7 @@ app.get('/get_players_by_country_or_region', routes.get_players_by_country_or_re
  */
 app.get('/get_clubs_by_country_or_region', routes.get_clubs_by_country_or_region);
 
+
 /**
  * @swagger
  * /get_game_details:
@@ -118,6 +138,24 @@ app.get('/get_clubs_by_country_or_region', routes.get_clubs_by_country_or_region
  *         description: Successful response with games events and player details (fifa card layout).
  */
 app.get('/get_game_details', routes.get_game_details);
+
+/**
+ * @swagger
+ * /get_basic_player_info:
+ *   get:
+ *     summary: Get a basic deatils of the player
+ *     parameters:
+ *          - in: query
+ *            name: player_id
+ *            type: int
+ *            required: true
+ *            description: player_id of the player
+ *     description: Get details of the player
+ *     responses:
+ *       200:
+ *         description: Successful response with basic information about the player
+ */
+app.get('/get_basic_player_info', routes.get_basic_player_info);
 
 /**
  * @swagger
