@@ -186,7 +186,8 @@ const get_detailed_player_info = async function(req, res) {
   const player_id = req.query.player_id;
 
   connection.query(`
-  SELECT p.year, p.overall, p.age, p2.name, p.jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, , pc.country
+  SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, pc.country, p.player_positions, 
+  p.preferred_foot, p.player_face_url, p.potential, p.weight_kg, p.height_cm, p.value_eur, p.wage_eur
   FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
   WHERE p2.id = ${player_id}
   ORDER BY p.year DESC;
