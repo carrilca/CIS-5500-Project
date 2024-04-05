@@ -9,40 +9,56 @@ import {
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGetRecentGames } from '../query';
 
 const GameList = () => {
 	const { games, isLoadingGames } = useGetRecentGames();
-
-	console.log(games);
+	const navigate = useNavigate();
 
 	if (isLoadingGames) {
-		<CircularProgress />;
+		return <CircularProgress />;
 	}
+
+	if (!games || games.length === 0) return null;
+
+	const handleRowClick = (gameId) => {
+		navigate(`/game-details/${gameId}`);
+	};
 
 	return (
 		<TableContainer component={Paper}>
-			<Table aria-label='simple table'>
+			<Table aria-label='recent games table'>
 				<TableHead>
 					<TableRow>
 						<TableCell>Date</TableCell>
-						<TableCell>Team 1</TableCell>
-						<TableCell>Team 2</TableCell>
-						<TableCell>Score</TableCell>
+						<TableCell>Stadium</TableCell>
+						<TableCell>Country</TableCell>
+						<TableCell>Home Club</TableCell>
+						<TableCell>Away Club</TableCell>
+						<TableCell>Game ID</TableCell>
+						<TableCell>Home Club ID</TableCell>
+						<TableCell>Away Club ID</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{games.map((game) => (
 						<TableRow
-							key={game.id}
+							key={game.game_id}
 							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+							onClick={() => handleRowClick(game.game_id)}
+							style={{ cursor: 'pointer' }}
 						>
 							<TableCell component='th' scope='row'>
-								{game.date}
+								{new Date(game.date).toLocaleDateString()}
 							</TableCell>
-							<TableCell>{game.team1}</TableCell>
-							<TableCell>{game.team2}</TableCell>
-							<TableCell>{game.score}</TableCell>
+							<TableCell>{game.stadium}</TableCell>
+							<TableCell>{game.country}</TableCell>
+							<TableCell>{game.homeClub}</TableCell>
+							<TableCell>{game.awayClub}</TableCell>
+							<TableCell>{game.game_id}</TableCell>
+							<TableCell>{game.Home_club_id}</TableCell>
+							<TableCell>{game.Away_club_id}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>

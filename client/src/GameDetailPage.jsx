@@ -9,31 +9,22 @@ import {
 import { Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
-
-const game = {
-	team1: 'Team A',
-	team2: 'Team B',
-	score: '2 - 3',
-	events: [
-		{ minute: '12', event: 'Goal', team: 'Team A', player: 'Player 1' },
-		{
-			minute: '34',
-			event: 'Yellow Card',
-			team: 'Team B',
-			player: 'Player 2',
-		},
-		{ minute: '45', event: 'Goal', team: 'Team B', player: 'Player 3' },
-		{ minute: '67', event: 'Goal', team: 'Team A', player: 'Player 4' },
-		{ minute: '89', event: 'Goal', team: 'Team B', player: 'Player 5' },
-	],
-};
-
-// TODO: game detail page
-// clicking on the player should take you to the player detail page
-// show card for each of the players in the video player page
+import { useParams } from 'react-router-dom';
+import { useGetGameDetails } from './query';
 
 const GameDetailPage = () => {
+	const { gameId } = useParams();
+
+	const { game, isLoadingGame } = useGetGameDetails(gameId);
+
+	if (isLoadingGame) {
+		return <CircularProgress />;
+	}
+
+	if (!game) return null;
+
 	return (
 		<Card>
 			<CardContent>
