@@ -7,10 +7,19 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
+import { useGetRecentGames } from '../query';
 
-// table with list of games -- most recent games first
-const GameList = ({ games }) => {
+const GameList = () => {
+	const { games, isLoadingGames } = useGetRecentGames();
+
+	console.log(games);
+
+	if (isLoadingGames) {
+		<CircularProgress />;
+	}
+
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label='simple table'>
