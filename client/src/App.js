@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import GameDetailPage from './GameDetailPage';
 import HomePage from './HomePage';
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
 		element: <HomePage />,
 	},
 	{
-		path: '/game',
+		path: '/game-details/:gameId',
 		element: <GameDetailPage />,
 	},
 	{
