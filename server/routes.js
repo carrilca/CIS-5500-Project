@@ -189,7 +189,7 @@ const get_basic_player_info = async function (req, res) {
 
 	connection.query(
 		`
-  SELECT p.year, p.overall, p.age, p2.name, p.jersey_number, pc.country
+  SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, pc.country
   FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
   WHERE p2.id = ${player_id}
   ORDER BY p.year DESC;
