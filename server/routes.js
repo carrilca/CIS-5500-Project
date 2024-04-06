@@ -96,71 +96,7 @@ const get_game_scores = async function (req, res) {
 	);
 };
 
-// Route 2: GET /get_players_by_country_or_region
-const get_players_by_country_or_region = async function (req, res) {
-	const country = req.query.country;
-	const region = req.query.region;
-
-	// Here is a complete example of how to query the database in JavaScript.
-	// Only a small change (unrelated to querying) is required for TASK 3 in this route.
-	connection.query(
-		`
-
-  `,
-		(err, data) => {
-			if (err || data.length === 0) {
-				// If there is an error for some reason, or if the query is empty (this should not be possible)
-				// print the error message and return an empty object instead
-				console.log(err);
-				// Be cognizant of the fact we return an empty object {}. For future routes, depending on the
-				// return type you may need to return an empty array [] instead.
-				res.json({});
-			} else {
-				// Here, we return results of the query as an object, keeping only relevant data
-				// being song_id and title which you will add. In this case, there is only one song
-				// so we just directly access the first element of the query results array (data)
-				// TODO (TASK 3): also return the song title in the response
-				res.json({
-					//response
-				});
-			}
-		}
-	);
-};
-
-// Route 3: GET /get_clubs_by_country_or_region
-const get_clubs_by_country_or_region = async function (req, res) {
-	const country = req.query.country;
-	const region = req.query.region;
-
-	// Here is a complete example of how to query the database in JavaScript.
-	// Only a small change (unrelated to querying) is required for TASK 3 in this route.
-	connection.query(
-		`
-
-  `,
-		(err, data) => {
-			if (err || data.length === 0) {
-				// If there is an error for some reason, or if the query is empty (this should not be possible)
-				// print the error message and return an empty object instead
-				console.log(err);
-				// Be cognizant of the fact we return an empty object {}. For future routes, depending on the
-				// return type you may need to return an empty array [] instead.
-				res.json({});
-			} else {
-				// Here, we return results of the query as an object, keeping only relevant data
-				// being song_id and title which you will add. In this case, there is only one song
-				// so we just directly access the first element of the query results array (data)
-				// TODO (TASK 3): also return the song title in the response
-				res.json({
-					//response
-				});
-			}
-		}
-	);
-};
-
-// Route 4: GET /get_game_details
+// Route 2: GET /get_game_details
 const get_game_details = async function (req, res) {
 	const game_id = req.query.game_id;
 
@@ -183,7 +119,7 @@ const get_game_details = async function (req, res) {
 	);
 };
 
-// Route 4: GET /get_detailed_player_info
+// Route 3: GET /get_basic_player_info
 const get_basic_player_info = async function (req, res) {
 	const player_id = req.query.player_id;
 
@@ -205,7 +141,7 @@ const get_basic_player_info = async function (req, res) {
 	);
 };
 
-// Route 5: GET /get_detailed_player_info
+// Route 4: GET /get_detailed_player_info
 const get_detailed_player_info = async function (req, res) {
 	const player_id = req.query.player_id;
 
@@ -213,7 +149,7 @@ const get_detailed_player_info = async function (req, res) {
 		`
   SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, pc.country, p.player_positions,
   p.preferred_foot, p.player_face_url, p.potential, p.weight_kg, p.height_cm, p.value_eur, p.wage_eur
-  FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
+  FROM Players p2 LEFT JOIN VideoGamePlayers p on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
   WHERE p2.id = ${player_id}
   ORDER BY p.year DESC;
   `,
@@ -227,12 +163,34 @@ const get_detailed_player_info = async function (req, res) {
 		}
 	);
 };
+
+// Route 5: GET /get_player_total_game_events_info
+const get_player_total_game_events_info = async function (req, res) {
+	const player_id = req.query.player_id;
+
+	connection.query(
+		`
+		SELECT c1.club_name, cg.type, COUNT(*) AS total
+		FROM ClubGoals cg JOIN Clubs c1 ON c1.club_id = cg.club_id
+		WHERE cg.player_id = ${player_id}
+		GROUP BY cg.type, c1.club_name;
+		`,
+		(err, data) => {
+			if (err || data.length === 0) {
+				console.log(err);
+				res.json([]);
+			} else {
+				res.json(data);
+			}
+		}
+	);
+};
+
 module.exports = {
 	get_recent_games,
 	get_game_scores,
-	get_players_by_country_or_region,
-	get_clubs_by_country_or_region,
 	get_game_details,
 	get_basic_player_info,
 	get_detailed_player_info,
+	get_player_total_game_events_info
 };

@@ -73,54 +73,6 @@ app.get('/get_recent_games', routes.get_recent_games);
  */
 app.get('/get_game_scores', routes.get_game_scores);
 
-
-/**
- * @swagger
- * /get_players_by_country_or_region:
- *   get:
- *     summary: Get a list of players by country or region
- *     parameters:
- *          - in: query
- *            name: region
- *            type: string
- *            required: false
- *            description: name of the region to be searched.
- *          - in: query
- *            name: country
- *            type: string
- *            required: false
- *            description: name of the country where games played to be searched.
- *     description: Retrieve a list of players from the database based on country or region.
- *     responses:
- *       200:
- *         description: Successful response with a list of players.
- */
-app.get('/get_players_by_country_or_region', routes.get_players_by_country_or_region);
-
-/**
- * @swagger
- * /get_clubs_by_country_or_region:
- *   get:
- *     summary: Get a list of clubs by country or region
- *     parameters:
- *          - in: query
- *            name: region
- *            type: string
- *            required: false
- *            description: name of the region to be searched.
- *          - in: query
- *            name: country
- *            type: string
- *            required: false
- *            description: name of the country where games played to be searched.
- *     description: Retrieve a list of clubs from the database based on country or region.
- *     responses:
- *       200:
- *         description: Successful response with a list of clubs.
- */
-app.get('/get_clubs_by_country_or_region', routes.get_clubs_by_country_or_region);
-
-
 /**
  * @swagger
  * /get_game_details:
@@ -174,6 +126,24 @@ app.get('/get_basic_player_info', routes.get_basic_player_info);
  *         description: Successful response with detailed information about the player
  */
 app.get('/get_detailed_player_info', routes.get_detailed_player_info);
+
+/**
+ * @swagger
+ * /get_player_total_game_events_info:
+ *   get:
+ *     summary: Get a aggeregate values of the player's total game events by club
+ *     parameters:
+ *          - in: query
+ *            name: player_id
+ *            type: int
+ *            required: true
+ *            description: player_id of the player
+ *     description: Get a aggeregate values of the player's total game events by club
+ *     responses:
+ *       200:
+ *         description: Get a aggeregate values of the player's total game events by club
+ */
+app.get('/get_player_total_game_events_info', routes.get_player_total_game_events_info);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
