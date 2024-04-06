@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import {
 	getBasicPlayerInfo,
-	getClubsByCountryOrRegion,
 	getDetailedPlayerInfo,
 	getGameDetails,
 	getGameScores,
-	getPlayersByCountryOrRegion,
+	getPlayerTotalGameEvents,
 	getRecentGames,
 } from './api';
 
@@ -30,15 +29,6 @@ export const useGetGameDetails = (gameId) => {
 	return { game: sortedData, isLoadingGame: isLoading };
 };
 
-export const useGetPlayersByCountryOrRegion = (params = {}) => {
-	const { data, isLoading } = useQuery({
-		queryKey: ['getPlayersByCountryOrRegion', params],
-		queryFn: () => getPlayersByCountryOrRegion(params),
-	});
-
-	return { players: data, isLoadingPlayers: isLoading };
-};
-
 export const useGetBasicPlayerInfo = (playerId) => {
 	const { data, isLoading } = useQuery({
 		queryKey: ['getBasicPlayerInfo', playerId],
@@ -61,15 +51,6 @@ export const useGetDetailedPlayerInfo = (playerId) => {
 	return { detailedPlayer: data, isLoadingDetailedPlayer: isLoading };
 };
 
-export const useGetClubsByCountryOrRegion = (params = {}) => {
-	const { data, isLoading } = useQuery({
-		queryKey: ['getClubsByCountryOrRegion', params],
-		queryFn: () => getClubsByCountryOrRegion(params),
-	});
-
-	return { clubs: data, isLoadingClubs: isLoading };
-};
-
 export const useGetGameScores = (gameId) => {
 	const { data, isLoading } = useQuery({
 		queryKey: ['getGameScores', gameId],
@@ -78,4 +59,14 @@ export const useGetGameScores = (gameId) => {
 	});
 
 	return { scores: data, isLoadingScores: isLoading };
+};
+
+export const useGetPlayerGameEvents = (playerId) => {
+	const { data, isLoading } = useQuery({
+		queryKey: ['getPlayerTotalGameEvents', playerId],
+		queryFn: () => getPlayerTotalGameEvents(playerId),
+		enabled: !!playerId,
+	});
+
+	return { playerGameEvents: data, isLoadingPlayerGameEvents: isLoading };
 };
