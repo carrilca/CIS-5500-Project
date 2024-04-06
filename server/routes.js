@@ -169,7 +169,7 @@ const get_game_details = async function (req, res) {
 	connection.query(
 		`
   SELECT c.game_event_id, c.club_id, c1.club_name, c.type, c.minute, c.player_id, p.name
-  FROM ClubGoals c JOIN Clubs c1 ON c1_club_id = c.club_id JOIN Players p ON p.id = c.player_id
+  FROM ClubGoals c JOIN Clubs c1 ON c1.club_id = c.club_id JOIN Players p ON p.id = c.player_id
   WHERE c.game_id = ${game_id};
   `,
 		(err, data) => {
