@@ -19,7 +19,6 @@ connection.connect((err) => {
 
 // Route 1: GET /get_recent_games
 const get_recent_games = async function (req, res) {
-	console.log('get_recent_games');
 	let country = req.query.country;
 	let club = req.query.club;
 	let startDate = req.query.startDate;
@@ -27,8 +26,8 @@ const get_recent_games = async function (req, res) {
 
 	if (country == undefined) country = '';
 	if (club == undefined) club = '';
-	if (startDate == undefined) startDate = '1900-01-01';
-	if (endDate == undefined) endDate = '2100-01-01';
+	if (!startDate) startDate = '1900-01-01';
+	if (!endDate) endDate = '2100-01-01';
 
 	connection.query(
 		`
@@ -89,7 +88,7 @@ const get_game_scores = async function (req, res) {
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
-				res.json({});
+				res.json([]);
 			} else {
 				res.json(data[0]);
 			}
@@ -176,7 +175,7 @@ const get_game_details = async function (req, res) {
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
-				res.json({});
+				res.json([]);
 			} else {
 				res.json(data);
 			}
@@ -198,9 +197,9 @@ const get_basic_player_info = async function (req, res) {
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
-				res.json({});
+				res.json([]);
 			} else {
-				res.json({});
+				res.json(data);
 			}
 		}
 	);
@@ -221,9 +220,9 @@ const get_detailed_player_info = async function (req, res) {
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
-				res.json({});
+				res.json([]);
 			} else {
-				res.json({});
+				res.json(data);
 			}
 		}
 	);
