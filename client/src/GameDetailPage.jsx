@@ -9,6 +9,7 @@ import {
 import { Card, CardContent, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import PlayerCard from './components/PlayerCard';
 import { useGetGameDetails, useGetGameScores } from './query';
 
 const GameDetailPage = () => {
@@ -22,11 +23,6 @@ const GameDetailPage = () => {
 		return <CircularProgress />;
 	}
 
-	//TODO: can we also just return club name?
-	const getClubName = (clubId) => {
-		return `Club ${clubId}`;
-	};
-
 	const getPlayerName = (playerId) => {
 		return (
 			<Typography
@@ -38,7 +34,7 @@ const GameDetailPage = () => {
 				}}
 				onClick={() => navigate(`/player/${playerId}`)}
 			>
-				Player {playerId}
+				{playerId}
 			</Typography>
 		);
 	};
@@ -66,9 +62,8 @@ const GameDetailPage = () => {
 									</TimelineSeparator>
 									<TimelineContent>
 										<Typography>
-											At minute: {event.minute} - Type: {event.type}:{' '}
-											{getPlayerName(event.player_id)} (
-											{getClubName(event.club_id)})
+											At minute: {event.minute} - Event Type: {event.type}:{' '}
+											{getPlayerName(event.player_id)} Club: {event.club_name}
 										</Typography>
 									</TimelineContent>
 								</TimelineItem>
@@ -80,6 +75,17 @@ const GameDetailPage = () => {
 						No game events available.
 					</Typography>
 				)}
+			</CardContent>
+			<CardContent>
+				{game.map((event) => (
+					<TimelineItem key={event.game_event_id}>
+						<TimelineContent>
+							<Typography>
+								<PlayerCard playerId={event.player_id} />
+							</Typography>
+						</TimelineContent>
+					</TimelineItem>
+				))}
 			</CardContent>
 		</Card>
 	);
