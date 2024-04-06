@@ -10,8 +10,6 @@ import {
 } from './api';
 
 export const useGetRecentGames = (params = {}) => {
-	console.log('useGetRecentGames');
-
 	const { data, isLoading } = useQuery({
 		queryKey: ['getRecentGames', params],
 		queryFn: () => getRecentGames(params),
@@ -56,7 +54,7 @@ export const useGetDetailedPlayerInfo = (playerId) => {
 		enabled: !!playerId,
 	});
 
-	return { player: data, isLoadingPlayer: isLoading };
+	return { detailedPlayer: data, isLoadingDetailedPlayer: isLoading };
 };
 
 export const useGetClubsByCountryOrRegion = (params = {}) => {
