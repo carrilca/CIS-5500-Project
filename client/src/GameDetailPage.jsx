@@ -23,7 +23,7 @@ const GameDetailPage = () => {
 		return <CircularProgress />;
 	}
 
-	const getPlayerName = (playerId) => {
+	const getPlayerName = (playerId, name) => {
 		return (
 			<Typography
 				component='span'
@@ -34,7 +34,7 @@ const GameDetailPage = () => {
 				}}
 				onClick={() => navigate(`/player/${playerId}`)}
 			>
-				{playerId}
+				{name}
 			</Typography>
 		);
 	};
@@ -62,8 +62,9 @@ const GameDetailPage = () => {
 									</TimelineSeparator>
 									<TimelineContent>
 										<Typography>
-											At minute: {event.minute} - Event Type: {event.type}:{' '}
-											{getPlayerName(event.player_id)} Club: {event.club_name}
+											At minute: {event.minute} - Event Type: {event.type}{' '}
+											{getPlayerName(event.player_id, event.name)} Club:{' '}
+											{event.club_name}
 										</Typography>
 									</TimelineContent>
 								</TimelineItem>

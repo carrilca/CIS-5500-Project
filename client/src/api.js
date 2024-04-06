@@ -22,22 +22,6 @@ export const getGameScores = async (gameId) => {
 	return response.data;
 };
 
-export const getPlayersByCountryOrRegion = async (params = {}) => {
-	const response = await api.get('/get_players_by_country_or_region', {
-		params,
-	});
-
-	return response.data;
-};
-
-export const getClubsByCountryOrRegion = async (params = {}) => {
-	const response = await api.get('/get_clubs_by_country_or_region', {
-		params,
-	});
-
-	return response.data;
-};
-
 export const getGameDetails = async (gameId) => {
 	const response = await api.get('/get_game_details', {
 		params: { game_id: gameId },
@@ -56,6 +40,14 @@ export const getBasicPlayerInfo = async (playerId) => {
 
 export const getDetailedPlayerInfo = async (playerId) => {
 	const response = await api.get('/get_detailed_player_info', {
+		params: { player_id: playerId },
+	});
+
+	return response.data;
+};
+
+export const getPlayerTotalGameEvents = async (playerId) => {
+	const response = await api.get('/get_player_total_game_events_info', {
 		params: { player_id: playerId },
 	});
 

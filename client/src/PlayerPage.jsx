@@ -11,7 +11,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetDetailedPlayerInfo } from './query';
+import { useGetDetailedPlayerInfo, useGetPlayerGameEvents } from './query';
 
 const PlayerPage = () => {
 	const { playerId } = useParams();
@@ -20,7 +20,12 @@ const PlayerPage = () => {
 	const { detailedPlayer, isLoadingDetailedPlayer } =
 		useGetDetailedPlayerInfo(playerId);
 
-	if (isLoadingDetailedPlayer) {
+	const { playerGameEvents, isLoadingPlayerGameEvents } =
+		useGetPlayerGameEvents(playerId);
+
+	console.log(playerGameEvents);
+
+	if (isLoadingDetailedPlayer || isLoadingPlayerGameEvents) {
 		return <CircularProgress />;
 	}
 
@@ -52,7 +57,7 @@ const PlayerPage = () => {
 				</Box>
 				<TabPanel value='1'>
 					<Typography variant='h4' gutterBottom>
-						{detailedPlayer[0]?.name} ({detailedPlayer[0].age})
+						{detailedPlayer[0]?.name} ({detailedPlayer[0].age || 'Age unknown'})
 					</Typography>
 					<Typography variant='h6' gutterBottom>
 						Position: {detailedPlayer[0].player_positions},{' '}
@@ -122,6 +127,14 @@ const PlayerPage = () => {
 					))}
 				</TabPanel>
 			</TabContext>
+			{playerGameEvents.map((event, index) => (
+				<Card key={index} sx={{ mb: 2 }}>
+					<CardContent>
+						<Typography variant='h6'>{event.club_name}</Typography>
+						<Typography>Total Games Played: {event.total}</Typography>
+					</CardContent>
+				</Card>
+			))}
 		</Box>
 	);
 };
