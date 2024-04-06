@@ -25,7 +25,9 @@ export const useGetGameDetails = (gameId) => {
 		enabled: !!gameId,
 	});
 
-	return { game: data, isLoadingGame: isLoading };
+	const sortedData = data?.sort((a, b) => b.minute - a.minute);
+
+	return { game: sortedData, isLoadingGame: isLoading };
 };
 
 export const useGetPlayersByCountryOrRegion = (params = {}) => {
@@ -44,7 +46,9 @@ export const useGetBasicPlayerInfo = (playerId) => {
 		enabled: !!playerId,
 	});
 
-	return { player: data, isLoadingPlayer: isLoading };
+	const recentData = data?.[0] || null;
+
+	return { player: recentData, isLoadingPlayer: isLoading };
 };
 
 export const useGetDetailedPlayerInfo = (playerId) => {

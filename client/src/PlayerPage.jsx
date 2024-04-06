@@ -11,20 +11,25 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetBasicPlayerInfo, useGetDetailedPlayerInfo } from './query';
+import { useGetDetailedPlayerInfo } from './query';
 
 const PlayerPage = () => {
 	const { playerId } = useParams();
 	const [currentTab, setCurrentTab] = useState('1');
 
-	const { player, isLoadingPlayer } = useGetBasicPlayerInfo(playerId);
 	const { detailedPlayer, isLoadingDetailedPlayer } =
 		useGetDetailedPlayerInfo(playerId);
 
-	console.log(player);
-
-	if (isLoadingDetailedPlayer || isLoadingPlayer) {
+	if (isLoadingDetailedPlayer) {
 		return <CircularProgress />;
+	}
+
+	if (!detailedPlayer || detailedPlayer.length === 0) {
+		return (
+			<Typography variant='h5' style={{ padding: 20 }}>
+				No player data available.
+			</Typography>
+		);
 	}
 
 	const handleChange = (e, tabName) => {
@@ -47,7 +52,7 @@ const PlayerPage = () => {
 				</Box>
 				<TabPanel value='1'>
 					<Typography variant='h4' gutterBottom>
-						{detailedPlayer[0].name} ({detailedPlayer[0].age})
+						{detailedPlayer[0]?.name} ({detailedPlayer[0].age})
 					</Typography>
 					<Typography variant='h6' gutterBottom>
 						Position: {detailedPlayer[0].player_positions},{' '}
