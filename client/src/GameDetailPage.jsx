@@ -6,52 +6,80 @@ import {
 	TimelineItem,
 	TimelineSeparator,
 } from '@mui/lab';
-import { Typography } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Card, CardContent, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useGetGameDetails } from './query';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetGameDetails, useGetGameScores } from './query';
 
 const GameDetailPage = () => {
 	const { gameId } = useParams();
+	const navigate = useNavigate();
 
 	const { game, isLoadingGame } = useGetGameDetails(gameId);
+	const { scores, isLoadingScores } = useGetGameScores(gameId);
 
-	if (isLoadingGame) {
+	if (isLoadingGame || isLoadingScores) {
 		return <CircularProgress />;
 	}
 
-	if (!game) return null;
+	//TODO: can we also just return club name?
+	const getClubName = (clubId) => {
+		return `Club ${clubId}`;
+	};
+
+	const getPlayerName = (playerId) => {
+		return (
+			<Typography
+				component='span'
+				style={{
+					cursor: 'pointer',
+					textDecoration: 'underline',
+					color: 'blue',
+				}}
+				onClick={() => navigate(`/player/${playerId}`)}
+			>
+				Player {playerId}
+			</Typography>
+		);
+	};
 
 	return (
 		<Card>
 			<CardContent>
 				<Typography variant='h5' gutterBottom>
-					{game.team1} vs {game.team2}
+					Game Details
 				</Typography>
 				<Typography variant='h6' gutterBottom>
-					Score: {game.score}
+					Score: {scores.home_goals || 0} - {scores.visitor_goals || 0}
 				</Typography>
-				<Typography variant='body1' color='textSecondary' gutterBottom>
-					Game Events:
-				</Typography>
-				<Timeline>
-					{game.events.map((event, index) => (
-						<TimelineItem key={index}>
-							<TimelineSeparator>
-								<TimelineDot />
-								{index < game.events.length - 1 && <TimelineConnector />}
-							</TimelineSeparator>
-							<TimelineContent>
-								<Typography>
-									{event.minute}' - {event.event}: {event.player} ({event.team})
-								</Typography>
-							</TimelineContent>
-						</TimelineItem>
-					))}
-				</Timeline>
+				{game.length > 0 ? (
+					<>
+						<Typography variant='body1' color='textSecondary' gutterBottom>
+							Game Events:
+						</Typography>
+						<Timeline>
+							{game.map((event, index) => (
+								<TimelineItem key={event.game_event_id}>
+									<TimelineSeparator>
+										<TimelineDot />
+										{index < game.length - 1 && <TimelineConnector />}
+									</TimelineSeparator>
+									<TimelineContent>
+										<Typography>
+											At minute: {event.minute} - Type: {event.type}:{' '}
+											{getPlayerName(event.player_id)} (
+											{getClubName(event.club_id)})
+										</Typography>
+									</TimelineContent>
+								</TimelineItem>
+							))}
+						</Timeline>
+					</>
+				) : (
+					<Typography variant='body1' color='textSecondary'>
+						No game events available.
+					</Typography>
+				)}
 			</CardContent>
 		</Card>
 	);

@@ -1,21 +1,14 @@
-import {
-	Button,
-	FormControl,
-	Grid,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-} from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
-const Search = () => {
-	const [teamName, setTeamName] = useState('');
-	const [competition, setCompetition] = useState('');
+const Search = ({ onSearch }) => {
+	const [club, setClub] = useState('');
+	const [country, setCountry] = useState('');
+	const [startDate, setStartDate] = useState('');
+	const [endDate, setEndDate] = useState('');
 
-	// TODO: add search logic
 	const handleSearch = () => {
-		console.log({ teamName, competition });
+		onSearch({ club, country, startDate, endDate });
 	};
 
 	return (
@@ -26,23 +19,37 @@ const Search = () => {
 					<TextField
 						fullWidth
 						label='Team Name'
-						value={teamName}
-						onChange={(e) => setTeamName(e.target.value)}
+						value={club}
+						onChange={(e) => setClub(e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={3}>
-					<FormControl fullWidth>
-						<InputLabel>Competition</InputLabel>
-						<Select
-							value={competition}
-							label='Competition'
-							onChange={(e) => setCompetition(e.target.value)}
-						>
-							<MenuItem value='Premier League'>Premier League</MenuItem>
-							<MenuItem value='La Liga'>La Liga</MenuItem>
-							{/* // TODO: dynamically render list */}
-						</Select>
-					</FormControl>
+					<TextField
+						fullWidth
+						label='Country'
+						value={country}
+						onChange={(e) => setCountry(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={12} sm={3}>
+					<TextField
+						fullWidth
+						type='date'
+						label='Start Date'
+						InputLabelProps={{ shrink: true }}
+						value={startDate}
+						onChange={(e) => setStartDate(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={12} sm={3}>
+					<TextField
+						fullWidth
+						type='date'
+						label='End Date'
+						InputLabelProps={{ shrink: true }}
+						value={endDate}
+						onChange={(e) => setEndDate(e.target.value)}
+					/>
 				</Grid>
 				<Grid item xs={12}>
 					<Button variant='contained' onClick={handleSearch}>

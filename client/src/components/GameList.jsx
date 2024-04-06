@@ -12,8 +12,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetRecentGames } from '../query';
 
-const GameList = () => {
-	const { games, isLoadingGames } = useGetRecentGames();
+const GameList = ({ searchParams }) => {
+	const { games, isLoadingGames } = useGetRecentGames(searchParams);
 	const navigate = useNavigate();
 
 	if (isLoadingGames) {
