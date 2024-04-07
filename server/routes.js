@@ -57,34 +57,45 @@ const get_game_scores = async function (req, res) {
 	let game_id = req.query.game_id;
 
 	connection.query(
-		`
-  WITH HomeClubGoals AS (
-    SELECT HCG.game_id, HCG.club_id, COUNT(*) AS home_goals
-    FROM ClubGoals HCG
-    WHERE HCG.type = 'Goals'
-    GROUP BY HCG.game_id
-  ),
-  VisitorClubGoals AS (
-    SELECT VCG.game_id, VCG.club_id, COUNT(*) AS visitor_goals
-    FROM ClubGoals VCG
-    WHERE VCG.type = 'Goals'
-    GROUP BY VCG.game_id
-  )
-
-  SELECT DISTINCT
-    HG.home_goals,
-    VG.visitor_goals
-  FROM
-    ClubGame CG
-  LEFT JOIN HomeClubGoals HG
-    ON CG.game_id=HG.game_id AND CG.home_club_id=HG.club_id
-  LEFT JOIN VisitorClubGoals VG
-    ON CG.game_id=VG.game_id AND CG.away_club_id=VG.club_id
-  LEFT JOIN ClubGoals CGL
-    ON CGL.club_id=HG.club_id AND CGL.club_id=VG.club_id
-  WHERE
-	CG.game_id = ${game_id};
-  `,
+	`
+	SELECT
+		IFNULL(ch_goals.total_goals, 0) AS Home_team_goals,
+		IFNULL(ca_goals.total_goals, 0) AS Away_team_goals
+	FROM
+		ClubGame cg
+	LEFT JOIN
+		Clubs ch ON cg.Home_club_id = ch.club_id
+	LEFT JOIN
+		Clubs ca ON cg.Away_club_id = ca.club_id
+	LEFT JOIN (
+		SELECT
+			game_id,
+			club_id,
+			COUNT(*) AS total_goals
+		FROM
+			ClubGoals
+		WHERE
+			type = 'Goal'
+		GROUP BY
+			game_id,
+			club_id
+	) AS ch_goals ON cg.game_id = ch_goals.game_id AND cg.Home_club_id = ch_goals.club_id
+	LEFT JOIN (
+		SELECT
+			game_id,
+			club_id,
+			COUNT(*) AS total_goals
+		FROM
+			ClubGoals
+		WHERE
+			type = 'Goal'
+		GROUP BY
+			game_id,
+			club_id
+	) AS ca_goals ON cg.game_id = ca_goals.game_id AND cg.Away_club_id = ca_goals.club_id
+	WHERE
+    	cg.game_id = ${game_id};
+	`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
