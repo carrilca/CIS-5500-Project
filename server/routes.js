@@ -31,16 +31,16 @@ const get_recent_games = async function (req, res) {
 
 	connection.query(
 		`
-    SELECT c.game_id, c.date, c.stadium, c3.country, c1.club_name AS homeClub, c2.club_name AS awayClub, c.Home_club_id, c.Away_club_id
-    FROM ClubGame c JOIN Clubs c1 ON (c.Home_club_id = c1.club_id) JOIN PlayerCountries c3 ON (c1.country_id = c3.ID), Clubs c2
-    WHERE c.Away_club_id = c2.club_id AND
-    (c3.country LIKE "%${country}") AND
-    (c1.club_name LIKE "%${club}%" OR c2.club_name LIKE "%${club}%") AND
-    (c.date > "${startDate}") AND
-    (c.date < "${endDate}")
-    ORDER BY date DESC
-    LIMIT 10;
-  `,
+		SELECT c.game_id, c.date, c.stadium, c3.country, c1.club_name AS homeClub, c2.club_name AS awayClub, c.Home_club_id, c.Away_club_id
+		FROM ClubGame c JOIN Clubs c1 ON (c.Home_club_id = c1.club_id) JOIN PlayerCountries c3 ON (c1.country_id = c3.ID), Clubs c2
+		WHERE c.Away_club_id = c2.club_id AND
+		(c3.country LIKE "%${country}") AND
+		(c1.club_name LIKE "%${club}%" OR c2.club_name LIKE "%${club}%") AND
+		(c.date > "${startDate}") AND
+		(c.date < "${endDate}")
+		ORDER BY date DESC
+		LIMIT 10;
+		`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
@@ -55,36 +55,33 @@ const get_recent_games = async function (req, res) {
 // Route 1b: GET /get_game_scores
 const get_game_scores = async function (req, res) {
 	let game_id = req.query.game_id;
-
+	
 	connection.query(
 		`
-  WITH HomeClubGoals AS (
-    SELECT HCG.game_id, HCG.club_id, COUNT(*) AS home_goals
-    FROM ClubGoals HCG
-    WHERE HCG.type = 'Goals'
-    GROUP BY HCG.game_id
-  ),
-  VisitorClubGoals AS (
-    SELECT VCG.game_id, VCG.club_id, COUNT(*) AS visitor_goals
-    FROM ClubGoals VCG
-    WHERE VCG.type = 'Goals'
-    GROUP BY VCG.game_id
-  )
-
-  SELECT DISTINCT
-    HG.home_goals,
-    VG.visitor_goals
-  FROM
-    ClubGame CG
-  LEFT JOIN HomeClubGoals HG
-    ON CG.game_id=HG.game_id AND CG.home_club_id=HG.club_id
-  LEFT JOIN VisitorClubGoals VG
-    ON CG.game_id=VG.game_id AND CG.away_club_id=VG.club_id
-  LEFT JOIN ClubGoals CGL
-    ON CGL.club_id=HG.club_id AND CGL.club_id=VG.club_id
-  WHERE
-	CG.game_id = ${game_id};
-  `,
+		SELECT
+			IFNULL(ch_goals.total_goals, 0) AS Home_team_goals,
+			IFNULL(ca_goals.total_goals, 0) AS Away_team_goals
+		FROM
+			ClubGame cg
+		LEFT JOIN
+			Clubs ch ON cg.Home_club_id = ch.club_id
+		LEFT JOIN
+			Clubs ca ON cg.Away_club_id = ca.club_id
+		LEFT JOIN (
+			SELECT game_id, club_id, COUNT(*) AS total_goals
+			FROM ClubGoals
+			WHERE type = 'Goal'
+			GROUP BY game_id, club_id
+		) AS ch_goals ON cg.game_id = ch_goals.game_id AND cg.Home_club_id = ch_goals.club_id
+		LEFT JOIN (
+			SELECT game_id, club_id, COUNT(*) AS total_goals
+			FROM ClubGoals
+			WHERE type = 'Goal'
+			GROUP BY game_id, club_id
+		) AS ca_goals ON cg.game_id = ca_goals.game_id AND cg.Away_club_id = ca_goals.club_id
+		WHERE
+			cg.game_id = ${game_id};
+		`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
@@ -104,10 +101,10 @@ const get_game_details = async function (req, res) {
 	// Only a small change (unrelated to querying) is required for TASK 3 in this route.
 	connection.query(
 		`
-  SELECT c.game_event_id, c.club_id, c1.club_name, c.type, c.minute, c.player_id, p.name
-  FROM ClubGoals c JOIN Clubs c1 ON c1.club_id = c.club_id JOIN Players p ON p.id = c.player_id
-  WHERE c.game_id = ${game_id};
-  `,
+		SELECT c.game_event_id, c.club_id, c1.club_name, c.type, c.minute, c.player_id, p.name
+		FROM ClubGoals c JOIN Clubs c1 ON c1.club_id = c.club_id JOIN Players p ON p.id = c.player_id
+		WHERE c.game_id = ${game_id};
+		`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
@@ -125,11 +122,11 @@ const get_basic_player_info = async function (req, res) {
 
 	connection.query(
 		`
-  SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, pc.country
-  FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
-  WHERE p2.id = ${player_id}
-  ORDER BY p.year DESC;
-  `,
+		SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, pc.country
+		FROM VideoGamePlayers p JOIN Players p2 on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
+		WHERE p2.id = ${player_id}
+		ORDER BY p.year DESC;
+		`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
@@ -147,12 +144,12 @@ const get_detailed_player_info = async function (req, res) {
 
 	connection.query(
 		`
-  SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, pc.country, p.player_positions,
-  p.preferred_foot, p.player_face_url, p.potential, p.weight_kg, p.height_cm, p.value_eur, p.wage_eur
-  FROM Players p2 LEFT JOIN VideoGamePlayers p on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
-  WHERE p2.id = ${player_id}
-  ORDER BY p.year DESC;
-  `,
+		SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, pc.country, p.player_positions,
+		p.preferred_foot, p.player_face_url, p.potential, p.weight_kg, p.height_cm, p.value_eur, p.wage_eur
+		FROM Players p2 LEFT JOIN VideoGamePlayers p on p.player_id = p2.id JOIN PlayerCountries pc ON p2.country_id = pc.ID
+		WHERE p2.id = ${player_id}
+		ORDER BY p.year DESC;
+		`,
 		(err, data) => {
 			if (err || data.length === 0) {
 				console.log(err);
