@@ -55,6 +55,7 @@ const get_recent_games = async function (req, res) {
 // Route 1b: GET /get_game_scores
 const get_game_scores = async function (req, res) {
 	let game_id = req.query.game_id;
+	
 	connection.query(
 		`
 		SELECT
