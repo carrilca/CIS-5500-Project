@@ -80,10 +80,10 @@ const get_game_scores = async function (req, res) {
     ON CG.game_id=HG.game_id AND CG.home_club_id=HG.club_id
   LEFT JOIN VisitorClubGoals VG
     ON CG.game_id=VG.game_id AND CG.away_club_id=VG.club_id
-  JOIN ClubGoals CGL
-    ON CG.game_id=VG.game_id
+  LEFT JOIN ClubGoals CGL
+    ON CGL.club_id=HG.club_id AND CGL.club_id=VG.club_id
   WHERE
-    CG.game_id = ${game_id};
+  	CG.game_id = ${game_id};
   `,
 		(err, data) => {
 			if (err || data.length === 0) {
