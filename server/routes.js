@@ -83,7 +83,7 @@ const get_game_scores = async function (req, res) {
   LEFT JOIN ClubGoals CGL
     ON CGL.club_id=HG.club_id AND CGL.club_id=VG.club_id
   WHERE
-  	CG.game_id = ${game_id};
+	CG.game_id = ${game_id};
   `,
 		(err, data) => {
 			if (err || data.length === 0) {
