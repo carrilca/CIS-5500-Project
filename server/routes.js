@@ -59,28 +59,24 @@ const get_game_scores = async function (req, res) {
 	connection.query(
 		`
 		SELECT
-			IFNULL(ch_goals.total_goals, 0) AS Home_team_goals,
-			IFNULL(ca_goals.total_goals, 0) AS Away_team_goals
+			SUM(CASE WHEN CG.Home_club_id = CGG.club_id THEN 1 ELSE 0 END) AS Home_club_goals,
+			SUM(CASE WHEN CG.Away_club_id = CGG.club_id THEN 1 ELSE 0 END) AS Away_club_goals
 		FROM
-			ClubGame cg
-		LEFT JOIN
-			Clubs ch ON cg.Home_club_id = ch.club_id
-		LEFT JOIN
-			Clubs ca ON cg.Away_club_id = ca.club_id
-		LEFT JOIN (
-			SELECT game_id, club_id, COUNT(*) AS total_goals
-			FROM ClubGoals
-			WHERE type = 'Goal'
-			GROUP BY game_id, club_id
-		) AS ch_goals ON cg.game_id = ch_goals.game_id AND cg.Home_club_id = ch_goals.club_id
-		LEFT JOIN (
-			SELECT game_id, club_id, COUNT(*) AS total_goals
-			FROM ClubGoals
-			WHERE type = 'Goal'
-			GROUP BY game_id, club_id
-		) AS ca_goals ON cg.game_id = ca_goals.game_id AND cg.Away_club_id = ca_goals.club_id
+			ClubGame CG
+		INNER JOIN
+			ClubGoals CGG ON CG.game_id = CGG.game_id
+		INNER JOIN
+			Clubs HC ON CG.Home_club_id = HC.club_id
+		INNER JOIN
+			Clubs AC ON CG.Away_club_id = AC.club_id
 		WHERE
-			cg.game_id = ${game_id};
+			CG.game_id = ${game_id}
+		GROUP BY
+			CG.game_id,
+			CG.Home_club_id,
+			HC.club_name,
+			CG.Away_club_id,
+			AC.club_name;
 		`,
 		(err, data) => {
 			if (err || data.length === 0) {
