@@ -46,7 +46,7 @@ const GameDetailPage = () => {
 					Game Details
 				</Typography>
 				<Typography variant='h6' gutterBottom>
-					Score: {scores.home_goals || 0} - {scores.visitor_goals || 0}
+					Score: {scores.Home_club_goals || 0} - {scores.visitor_goals || 0}
 				</Typography>
 				{game.length > 0 ? (
 					<>
