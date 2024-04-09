@@ -118,7 +118,7 @@ const get_game_scores = async function (req, res) {
 		// 	HC.club_name,
 		// 	CG.Away_club_id,
 		// 	AC.club_name;
-  		WITH SCORE AS (
+		WITH SCORE AS (
 			SELECT club_id, game_id, COUNT(*) AS goals
 			FROM ClubGoals
 			WHERE type = 'Goals' AND game_id=${game_id}
@@ -126,7 +126,7 @@ const get_game_scores = async function (req, res) {
 		),
 		
 		SCORE_HOME_AWAY AS (
-			SELECT B.goals,
+			SELECT B.goals, A.home_club_id, A.away_club_id,
 			CASE 
 				WHEN B.club_id = A.home_club_id THEN 'HOME'
 				WHEN B.club_id = A.away_club_id THEN 'AWAY'
@@ -134,12 +134,27 @@ const get_game_scores = async function (req, res) {
 			END as team
 			FROM ClubGame A
 			JOIN SCORE B ON A.game_id = B.game_id
-		)
+		),
+
+		HOME_CLUB_NAME AS (
+			SELECT D.club_name AS home_club_name
+			FROM SCORE_HOME_AWAY C JOIN Clubs D
+			ON C.home_club_id=D.club_id
+			WHERE C.team='HOME'
+		),
+
+		AWAY_CLUB_NAME AS (
+			SELECT D.club_name AS away_club_name
+			FROM SCORE_HOME_AWAY C JOIN Clubs D
+			ON C.away_club_id=D.club_id
+			WHERE C.team='AWAY'
+		)		
 		
 		SELECT 
 			SUM(CASE WHEN team = 'HOME' THEN goals ELSE 0 END) AS Home_club_goals,
-			SUM(CASE WHEN team = 'AWAY' THEN goals ELSE 0 END) AS Away_club_goals
-		FROM SCORE_HOME_AWAY;
+			SUM(CASE WHEN team = 'AWAY' THEN goals ELSE 0 END) AS Away_club_goals,
+			home_club_name, away_club_name
+		FROM SCORE_HOME_AWAY, HOME_CLUB_NAME, AWAY_CLUB_NAME;
 		`,
 		(err, data) => {
 			if (err || data.length === 0) {
