@@ -17,8 +17,32 @@ connection.connect((err) => {
 	}
 });
 
-// Route 1: GET /get_recent_games
+// ROUTE 1: GET /get_recent_games
+// ● Description: 
+// 		This route returns a list of the 10 most recent games, sorted in 
+// 	 	descending order based on current date (i.e: most recent dates first).
+//
+// ● Request path: 
+// 		GET /get_recent_games
+//
+// ● Query/Request parameters:
+// 		country, string
+// 		club, string
+// 		startDate, string
+// 		endDate, string
+//
+// ● Response parameters: 
+// 		game_id, int 
+// 		date, string
+// 		stadium, string
+// 		country, string
+// 		homeClub, string
+// 		awayClub, string
+// 		home_club_id, int
+// 		away_club_id, int
+//
 const get_recent_games = async function (req, res) {
+	// Set Request parameters
 	let country = req.query.country;
 	let club = req.query.club;
 	let startDate = req.query.startDate;
@@ -29,6 +53,7 @@ const get_recent_games = async function (req, res) {
 	if (!startDate) startDate = '1900-01-01';
 	if (!endDate) endDate = '2100-01-01';
 
+	// Execute query:
 	connection.query(
 		`
 		SELECT c.game_id, c.date, c.stadium, c3.country, c1.club_name AS homeClub, c2.club_name AS awayClub, c.Home_club_id, c.Away_club_id
@@ -52,10 +77,26 @@ const get_recent_games = async function (req, res) {
 	);
 };
 
-// Route 1b: GET /get_game_scores
+// ROUTE 1B: GET /get_game_scores
+// ● Description: 
+// 		This route returns the final score produced on
+//   	a match identified by a game_id (i.e.: Home 0:2 Visitor)
+//
+// ● Request path: 
+// 		GET /get_game_scores
+//
+// ● Query/Request parameters:
+// 		game_id, int
+//
+// ● Response parameters: 
+// 		Home_club_goals, int 
+// 		Away_club_goals, int
+//
 const get_game_scores = async function (req, res) {
+	// Set Request parameters
 	let game_id = req.query.game_id;
 	
+	// Execute query:
 	connection.query(
 		`
 		SELECT
@@ -89,12 +130,31 @@ const get_game_scores = async function (req, res) {
 	);
 };
 
-// Route 2: GET /get_game_details
+// ROUTE 2: GET /get_game_details
+// ● Description: 
+// 		This route returns detailed info associated to a soccer  
+//   	match identified by a game_id (i.e.: Home 0:2 Visitor)
+//
+// ● Request path: 
+// 		GET /get_game_details
+//
+// ● Query/Request parameters:
+// 		game_id, int
+//
+// ● Response parameters: 
+// 		game_event_id, int
+// 		club_id, int
+// 		club_name, string
+// 		type, string
+// 		minute, int
+// 		player_id, int
+// 		name, string
+//
 const get_game_details = async function (req, res) {
+	// Set Request parameters
 	const game_id = req.query.game_id;
 
-	// Here is a complete example of how to query the database in JavaScript.
-	// Only a small change (unrelated to querying) is required for TASK 3 in this route.
+	// Execute query:
 	connection.query(
 		`
 		SELECT c.game_event_id, c.club_id, c1.club_name, c.type, c.minute, c.player_id, p.name
@@ -112,10 +172,30 @@ const get_game_details = async function (req, res) {
 	);
 };
 
-// Route 3: GET /get_basic_player_info
+// ROUTE 3: GET /get_basic_player_info
+// ● Description: 
+// 		This route returns basic info associated to   
+//   	a soccer player identified by a player_id.
+//
+// ● Request path: 
+// 		GET /get_basic_player_info
+//
+// ● Query/Request parameters:
+// 		player_id, int
+//
+// ● Response parameters: 
+// 		year, int
+// 		overall, int
+// 		age, int
+// 		name, string
+// 		club_jersey_number, int
+// 		country, string
+//
 const get_basic_player_info = async function (req, res) {
+	// Set Request parameters
 	const player_id = req.query.player_id;
 
+	// Execute query:
 	connection.query(
 		`
 		SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, pc.country
@@ -134,10 +214,43 @@ const get_basic_player_info = async function (req, res) {
 	);
 };
 
-// Route 4: GET /get_detailed_player_info
+// ROUTE 4: GET /get_detailed_player_info
+// ● Description: 
+// 		This route returns detailed info associated to   
+//   	a soccer player identified by a player_id.
+//
+// ● Request path: 
+// 		GET /get_detailed_player_info
+//
+// ● Query/Request parameters:
+// 		player_id, int
+//
+// ● Response parameters: 
+// 		year, int
+// 		overall, int
+// 		age, int
+// 		name, string
+// 		club_jersey_number, int
+//  	shooting, int
+//  	dribbling, int
+//  	skill_moves, []string
+//  	passing, int
+//  	defending, int
+//  	country, string
+//  	player_positions, []string
+//  	preferred_foot, string
+//  	player_face_url, string
+//  	potential, int
+//  	weight_kg, int
+//  	height_cm, int
+// 	 	value_eur, int
+//  	wage_eur, int
+//
 const get_detailed_player_info = async function (req, res) {
+	// Set Request parameters
 	const player_id = req.query.player_id;
 
+	// Execute query:
 	connection.query(
 		`
 		SELECT p.year, p.overall, p.age, p2.name, p.club_jersey_number, p.shooting, p.dribbling, p.skill_moves, p.passing, p.defending, pc.country, p.player_positions,
@@ -157,10 +270,27 @@ const get_detailed_player_info = async function (req, res) {
 	);
 };
 
-// Route 5: GET /get_player_total_game_events_info
+// ROUTE 5: GET /get_player_total_game_events_info
+// ● Description: 
+// 		This route returns info associated to a soccer 
+//   	player's performance on games identified by a player_id.
+//
+// ● Request path: 
+// 		GET /get_player_total_game_events_info
+//
+// ● Query/Request parameters:
+// 		player_id, int
+//
+// ● Response parameters: 
+// 		c1.club_name, string
+// 		cg.type, int
+// 		total, int
+//
 const get_player_total_game_events_info = async function (req, res) {
+	// Set Request parameters
 	const player_id = req.query.player_id;
 
+	// Execute query:
 	connection.query(
 		`
 		SELECT c1.club_name, cg.type, COUNT(*) AS total
