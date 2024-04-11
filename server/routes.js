@@ -99,25 +99,6 @@ const get_game_scores = async function (req, res) {
 	// Execute query:
 	connection.query(
 		`
-		// SELECT
-		// 	SUM(CASE WHEN CG.Home_club_id = CGG.club_id THEN 1 ELSE 0 END) AS Home_club_goals,
-		// 	SUM(CASE WHEN CG.Away_club_id = CGG.club_id THEN 1 ELSE 0 END) AS Away_club_goals
-		// FROM
-		// 	ClubGame CG
-		// INNER JOIN
-		// 	ClubGoals CGG ON CG.game_id = CGG.game_id
-		// INNER JOIN
-		// 	Clubs HC ON CG.Home_club_id = HC.club_id
-		// INNER JOIN
-		// 	Clubs AC ON CG.Away_club_id = AC.club_id
-		// WHERE
-		// 	CG.game_id = ${game_id}
-		// GROUP BY
-		// 	CG.game_id,
-		// 	CG.Home_club_id,
-		// 	HC.club_name,
-		// 	CG.Away_club_id,
-		// 	AC.club_name;
 		WITH SCORE AS (
 			SELECT club_id, game_id, COUNT(*) AS goals
 			FROM ClubGoals
