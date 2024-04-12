@@ -99,43 +99,41 @@ const get_game_scores = async function (req, res) {
 	// Execute query:
 	connection.query(
 		`
-		WITH SCORE AS (
-			SELECT club_id, game_id, COUNT(*) AS goals
+		WITH CLUBS_TEMP AS (
+			SELECT game_id, home_club_id AS club_id, 'HOME' AS team
+			FROM ClubGame
+			WHERE game_id=${game_id}
+			UNION
+			SELECT game_id, away_club_id AS club_id, 'AWAY' AS team
+			FROM ClubGame
+			WHERE game_id=${game_id}
+		),
+
+		SCORE AS ( 
+			SELECT club_id, game_id, COUNT(*) as goals
 			FROM ClubGoals
 			WHERE type = 'Goals' AND game_id=${game_id}
 			GROUP BY game_id, club_id
 		),
-		
-		SCORE_HOME_AWAY AS (
-			SELECT B.goals, A.home_club_id, A.away_club_id,
-			CASE 
-				WHEN B.club_id = A.home_club_id THEN 'HOME'
-				WHEN B.club_id = A.away_club_id THEN 'AWAY'
-				ELSE 'UNKNOWN'
-			END as team
-			FROM ClubGame A
-			JOIN SCORE B ON A.game_id = B.game_id
+		CLUBS_SCORE AS (
+			SELECT A.*, CASE WHEN goals>0 THEN goals ELSE 0 END AS goals
+			FROM CLUBS_TEMP A LEFT JOIN SCORE B
+			ON A.club_id=B.club_id
 		),
 
-		HOME_CLUB_NAME AS (
-			SELECT D.club_name AS home_club_name
-			FROM SCORE_HOME_AWAY C JOIN Clubs D
-			ON C.home_club_id=D.club_id
-			WHERE C.team='HOME'
-		),
+		CLUBS_SCORE_NAME AS (
+			SELECT C.*, D.club_name AS home_club_name
+			FROM CLUBS_SCORE C JOIN Clubs D
+			ON C.club_id=D.club_id
+		)
 
-		AWAY_CLUB_NAME AS (
-			SELECT D.club_name AS away_club_name
-			FROM SCORE_HOME_AWAY C JOIN Clubs D
-			ON C.away_club_id=D.club_id
-			WHERE C.team='AWAY'
-		)		
-		
-		SELECT 
-			SUM(CASE WHEN team = 'HOME' THEN goals ELSE 0 END) AS Home_club_goals,
-			SUM(CASE WHEN team = 'AWAY' THEN goals ELSE 0 END) AS Away_club_goals,
-			home_club_name, away_club_name
-		FROM SCORE_HOME_AWAY, HOME_CLUB_NAME, AWAY_CLUB_NAME;
+	        SELECT 
+	               MAX(CASE WHEN team = 'HOME' THEN goals ELSE 0 END) AS Home_club_goals,
+	               MAX(CASE WHEN team = 'AWAY' THEN goals ELSE 0 END) AS Away_club_goals,
+	               MAX(CASE WHEN team = 'HOME' THEN home_club_name ELSE '' END) AS home_club_name,
+	               MAX(CASE WHEN team = 'AWAY' THEN home_club_name ELSE '' END) AS away_club_name
+	        FROM CLUBS_SCORE_NAME
+	        GROUP BY game_id
 		`,
 		(err, data) => {
 			if (err || data.length === 0) {
