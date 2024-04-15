@@ -47,6 +47,9 @@ const get_recent_games = async function (req, res) {
 	let club = req.query.club;
 	let startDate = req.query.startDate;
 	let endDate = req.query.endDate;
+	const page = req.query.page ?? 0;
+	const page_size = req.query.page_size ? parseInt(req.query.page_size) : 10;
+	const offset = (page) * page_size;	
 
 	if (country == undefined) country = '';
 	if (club == undefined) club = '';
@@ -61,10 +64,10 @@ const get_recent_games = async function (req, res) {
 		WHERE c.Away_club_id = c2.club_id AND
 		(c3.country LIKE "%${country}") AND
 		(c1.club_name LIKE "%${club}%" OR c2.club_name LIKE "%${club}%") AND
-		(c.date > "${startDate}") AND
-		(c.date < "${endDate}")
+		(c.date >= "${startDate}") AND
+		(c.date <= "${endDate}")
 		ORDER BY date DESC
-		LIMIT 10;
+		LIMIT ${page_size} OFFSET ${offset};
 		`,
 		(err, data) => {
 			if (err || data.length === 0) {
