@@ -1,15 +1,16 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
-const Search = ({ onSearch }) => {
-	const [club, setClub] = useState('');
-	const [country, setCountry] = useState('');
-	const [startDate, setStartDate] = useState('');
-	const [endDate, setEndDate] = useState('');
+const Search = ({ searchParams, onSearch, onSearchParamsChange }) => {
+	const { club, country, startDate, endDate } = searchParams;
 
-	const handleSearch = () => {
-		onSearch({ club, country, startDate, endDate });
-	};
+	const handleInputChange = (field, value) => {
+		onSearchParamsChange({ ...searchParams, [field]: value });
+	  };
+
+	const handleSearchClick = () => {
+		onSearch(searchParams);
+	  };
 
 	return (
 		<>
@@ -18,9 +19,9 @@ const Search = ({ onSearch }) => {
 				<Grid item xs={12} sm={3}>
 					<TextField
 						fullWidth
-						label='Team Name'
+						label='Club Name'
 						value={club}
-						onChange={(e) => setClub(e.target.value)}
+						onChange={(e) => handleInputChange('club', e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={3}>
@@ -28,7 +29,7 @@ const Search = ({ onSearch }) => {
 						fullWidth
 						label='Country'
 						value={country}
-						onChange={(e) => setCountry(e.target.value)}
+						onChange={(e) => handleInputChange('country', e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={3}>
@@ -38,7 +39,7 @@ const Search = ({ onSearch }) => {
 						label='Start Date'
 						InputLabelProps={{ shrink: true }}
 						value={startDate}
-						onChange={(e) => setStartDate(e.target.value)}
+						onChange={(e) => handleInputChange('startDate', e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={3}>
@@ -48,11 +49,11 @@ const Search = ({ onSearch }) => {
 						label='End Date'
 						InputLabelProps={{ shrink: true }}
 						value={endDate}
-						onChange={(e) => setEndDate(e.target.value)}
+						onChange={(e) => handleInputChange('endDate', e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<Button variant='contained' onClick={handleSearch}>
+					<Button variant='contained' onClick={handleSearchClick}>
 						Search
 					</Button>
 				</Grid>
