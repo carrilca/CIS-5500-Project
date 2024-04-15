@@ -15,10 +15,21 @@ const HomePage = () => {
 		setSearchParams(params);
 	};
 
+	const handleFieldUpdate = (field, value) => {
+		setSearchParams(prevParams => ({ ...prevParams, [field]: value }));
+	  };	
+
 	return (
 		<Container>
-			<Search onSearch={handleSearch} />
-			<GameList searchParams={searchParams} />
+			<Search 
+				searchParams={searchParams} 
+				onSearch={handleSearch} 
+				onSearchParamsChange={setSearchParams} // Passing function to update search parameters
+			/>
+			<GameList
+				searchParams={searchParams}
+				onFieldUpdate={handleFieldUpdate}
+			/>
 		</Container>
 	);
 };
