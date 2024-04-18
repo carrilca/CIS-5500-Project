@@ -14,7 +14,7 @@ const Search = ({ searchParams, onSearch, onSearchParamsChange }) => {
 
 	return (
 		<>
-			<h1>Game Search</h1>
+			<h2>Game Search</h2>
 			<Grid container spacing={2} alignItems='flex-end'>
 				<Grid item xs={12} sm={3}>
 					<TextField

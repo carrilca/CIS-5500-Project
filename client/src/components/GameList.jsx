@@ -52,12 +52,12 @@ const GameList = ({ searchParams, onFieldUpdate  }) => {
 			<Table aria-label='recent games table'>
 				<TableHead>
 					<TableRow>
-					<TableCell>Details</TableCell>
 						<TableCell>Date</TableCell>
 						<TableCell>Stadium</TableCell>
 						<TableCell>Country</TableCell>
 						<TableCell>Home Club</TableCell>
 						<TableCell>Away Club</TableCell>
+						<TableCell>Details</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -67,16 +67,6 @@ const GameList = ({ searchParams, onFieldUpdate  }) => {
 							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 							style={{ cursor: 'pointer' }}
 						>
-							<TableCell>
-								<Button 
-								size="small"
-								variant="contained"
-								style={{ backgroundColor: '#8cbbe9' }}
-								onClick={(event) => handleDetailsClick(game.game_id, event)}
-								>
-								Details
-								</Button>
-							</TableCell>
 							<TableCell component='th' scope='row'>
 								{new Date(game.date).toLocaleDateString()}
 							</TableCell>
@@ -95,6 +85,16 @@ const GameList = ({ searchParams, onFieldUpdate  }) => {
 								onClick={() => onFieldUpdate('club', game.awayClub)} 
 								style={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue' }}>
 								{game.awayClub}
+							</TableCell>
+							<TableCell>
+								<Button 
+								size="small"
+								variant="contained"
+								style={{ backgroundColor: '#8cbbe9' }}
+								onClick={(event) => handleDetailsClick(game.game_id, event)}
+								>
+								Details
+								</Button>
 							</TableCell>
 						</TableRow>
 					))}

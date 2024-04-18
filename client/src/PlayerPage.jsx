@@ -12,6 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetDetailedPlayerInfo, useGetPlayerGameEvents } from './query';
+import logo from './assets/logo.png'
 
 const PlayerPage = () => {
 	const { playerId } = useParams();
@@ -42,7 +43,13 @@ const PlayerPage = () => {
 	};
 
 	return (
+		
 		<Box sx={{ width: '100%', typography: 'body1' }}>
+			
+			<div class="topnav">
+				<img src={logo} width="159" height="40"/>
+			</div>
+
 			<TabContext value={currentTab}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 					<Tabs

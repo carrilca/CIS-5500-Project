@@ -11,6 +11,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PlayerCard from './components/PlayerCard';
 import { useGetGameDetails, useGetGameScores } from './query';
+import logo from './assets/logo.png'
 
 const GameDetailPage = () => {
 	const { gameId } = useParams();
@@ -41,6 +42,9 @@ const GameDetailPage = () => {
 
 	return (
 		<Card>
+			<div class="topnav">
+				<img src={logo} width="159" height="40"/>
+			</div>
 			<CardContent>
 				<Typography variant='h5' gutterBottom>
 					Game Details

@@ -2,6 +2,8 @@ import { Container } from '@mui/material';
 import React, { useState } from 'react';
 import GameList from './components/GameList';
 import Search from './components/Search';
+import './styles.css'
+import logo from './assets/logo.png'
 
 const HomePage = () => {
 	const [searchParams, setSearchParams] = useState({
@@ -20,7 +22,12 @@ const HomePage = () => {
 	  };	
 
 	return (
-		<Container>
+		<Container disableGutters maxWidth={true}>
+		<div class="topnav">
+			<img src={logo} width="159" height="40"/>
+		</div>
+
+		<div class="bodyContent">
 			<Search 
 				searchParams={searchParams} 
 				onSearch={handleSearch} 
@@ -30,6 +37,7 @@ const HomePage = () => {
 				searchParams={searchParams}
 				onFieldUpdate={handleFieldUpdate}
 			/>
+		</div>
 		</Container>
 	);
 };
