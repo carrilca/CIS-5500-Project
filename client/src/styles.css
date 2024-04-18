@@ -3,6 +3,10 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
 }
 
+card {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
+}
+
 .topnav {
   overflow: hidden;
   background-color: #1876D1;
@@ -26,4 +30,21 @@ body {
 .topnav img {
   float: left;
   padding: 10px 10px;
+}
+
+.center {
+    text-align:center;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: rgba(44, 43, 43, 0.832);
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -5,13 +5,18 @@ import {
 	TimelineDot,
 	TimelineItem,
 	TimelineSeparator,
+	TimelineOppositeContent,
 } from '@mui/lab';
-import { Card, CardContent, CircularProgress, Typography } from '@mui/material';
+import { Card, CardContent, CircularProgress, Typography, Grid } from '@mui/material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PlayerCard from './components/PlayerCard';
 import { useGetGameDetails, useGetGameScores } from './query';
 import logo from './assets/logo.png'
+import CropPortraitIcon from '@mui/icons-material/CropPortrait';
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import banner from './assets/banner.jpeg'
+import './styles.css'
 
 const GameDetailPage = () => {
 	const { gameId } = useParams();
@@ -46,27 +51,37 @@ const GameDetailPage = () => {
 				<img src={logo} width="159" height="40"/>
 			</div>
 			<CardContent>
-				<Typography variant='h5' gutterBottom>
-					Game Details
-				</Typography>
-				<Typography variant='h6' gutterBottom>
-					Score: {scores.home_club_name }{' '}{ scores.Home_club_goals || 0} - {scores.away_club_name}{' '}{scores.Away_club_goals || 0}
-				</Typography>
+				<br></br>
+				<div class = "container">
+					<img src={banner} width="130%" height="160" style={{marginLeft: "-20px"}}/>
+					<div class = "centered">
+						<h2>Game Details for {scores.home_club_name } vs {scores.away_club_name}</h2>
+						<h2><b>{scores.home_club_name }{' '}{ scores.Home_club_goals || 0} : {scores.away_club_name}{' '}{scores.Away_club_goals || 0}</b></h2>
+					</div>
+				</div>
+				
 				{game.length > 0 ? (
 					<>
 						<Typography variant='body1' color='textSecondary' gutterBottom>
-							Game Events:
+							<h3>Game Events:</h3>
 						</Typography>
 						<Timeline>
-							{game.map((event, index) => (
+							{game.sort(({minute: a}, {minute:b}) => a-b).map((event, index) => (
 								<TimelineItem key={event.game_event_id}>
+									<TimelineOppositeContent>
+										<Typography>
+											<b>{event.minute}'</b> 
+										</Typography>
+									</TimelineOppositeContent>
 									<TimelineSeparator>
-										<TimelineDot />
+										<TimelineDot color="primary">
+											{event.type === 'Cards' ? (<CropPortraitIcon />):(<SportsSoccerIcon />)}
+										</TimelineDot>
 										{index < game.length - 1 && <TimelineConnector />}
 									</TimelineSeparator>
 									<TimelineContent>
 										<Typography>
-											At minute: {event.minute} - Event Type: {event.type}{' '}
+											<b>{event.type}{' by '}</b>
 											{getPlayerName(event.player_id, event.name)} Club:{' '}
 											{event.club_name}
 										</Typography>
@@ -82,15 +97,18 @@ const GameDetailPage = () => {
 				)}
 			</CardContent>
 			<CardContent>
-				{game.map((event) => (
-					<TimelineItem key={event.game_event_id}>
-						<TimelineContent>
-							<Typography>
-								<PlayerCard playerId={event.player_id} />
-							</Typography>
-						</TimelineContent>
-					</TimelineItem>
+			<Typography variant='body1' color='textSecondary' gutterBottom>
+					<h3>Players In Action:</h3>
+				</Typography>
+				<Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+				{[...new Map(game.map(item =>[item['name'], item])).values()].map((event) => (
+					  <Grid item xs={3}>
+							{console.log(event)}
+							<PlayerCard playerId={event.player_id} event={event}/>
+						</Grid>
 				))}
+				</Grid>
+
 			</CardContent>
 		</Card>
 	);

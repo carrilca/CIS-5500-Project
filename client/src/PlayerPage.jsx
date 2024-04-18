@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetDetailedPlayerInfo, useGetPlayerGameEvents } from './query';
 import logo from './assets/logo.png'
+import './styles.css'
 
 const PlayerPage = () => {
 	const { playerId } = useParams();
@@ -23,8 +24,6 @@ const PlayerPage = () => {
 
 	const { playerGameEvents, isLoadingPlayerGameEvents } =
 		useGetPlayerGameEvents(playerId);
-
-	console.log(playerGameEvents);
 
 	if (isLoadingDetailedPlayer || isLoadingPlayerGameEvents) {
 		return <CircularProgress />;
@@ -45,7 +44,7 @@ const PlayerPage = () => {
 	return (
 		
 		<Box sx={{ width: '100%', typography: 'body1' }}>
-			
+
 			<div class="topnav">
 				<img src={logo} width="159" height="40"/>
 			</div>
@@ -81,11 +80,36 @@ const PlayerPage = () => {
 					<Typography>
 						Preferred Foot: {detailedPlayer[0].preferred_foot}
 					</Typography>
+					<h3>Player History by Club:</h3>
+					{playerGameEvents.sort(({type: a}, {type:b}) => b.localeCompare(a)).map((event, index) => (
+						<Card key={index} sx={{ mb: 2 }}>
+							<CardContent>
+								<Typography variant='h6'>{event.club_name}</Typography>
+								<Typography><b>Total {event.type}: {event.total}</b></Typography>
+							</CardContent>
+						</Card>
+					))}
+				</TabPanel>
+				<TabPanel value='2'>
+				<Typography variant='h4' gutterBottom>
+						{detailedPlayer[0]?.name} ({detailedPlayer[0].age || 'Age unknown'})
+					</Typography>
+					<Typography variant='h6' gutterBottom>
+						Position: {detailedPlayer[0].player_positions},{' '}
+						{detailedPlayer[0].country}
+					</Typography>
+					<img
+						src={detailedPlayer[0].player_face_url}
+						alt='Player'
+						style={{ width: 120, height: 120 }}
+					/>
+					<Typography>
+						Club Jersey Number: {detailedPlayer[0].club_jersey_number}
+					</Typography>
 					<Typography>
 						Preferred Foot: {detailedPlayer[0].preferred_foot}
 					</Typography>
-				</TabPanel>
-				<TabPanel value='2'>
+					<br></br>
 					<Card>
 						<CardContent>
 							<Typography variant='h5' gutterBottom>
@@ -123,6 +147,26 @@ const PlayerPage = () => {
 					</Card>
 				</TabPanel>
 				<TabPanel value='3'>
+				<Typography variant='h4' gutterBottom>
+						{detailedPlayer[0]?.name} ({detailedPlayer[0].age || 'Age unknown'})
+					</Typography>
+					<Typography variant='h6' gutterBottom>
+						Position: {detailedPlayer[0].player_positions},{' '}
+						{detailedPlayer[0].country}
+					</Typography>
+					<img
+						src={detailedPlayer[0].player_face_url}
+						alt='Player'
+						style={{ width: 120, height: 120 }}
+					/>
+					<Typography>
+						Club Jersey Number: {detailedPlayer[0].club_jersey_number}
+					</Typography>
+					<Typography>
+						Preferred Foot: {detailedPlayer[0].preferred_foot}
+					</Typography>
+					<br></br>
+					
 					{detailedPlayer.map((yearData, index) => (
 						<Card key={index} sx={{ mb: 2 }}>
 							<CardContent>
@@ -134,14 +178,6 @@ const PlayerPage = () => {
 					))}
 				</TabPanel>
 			</TabContext>
-			{playerGameEvents.map((event, index) => (
-				<Card key={index} sx={{ mb: 2 }}>
-					<CardContent>
-						<Typography variant='h6'>{event.club_name}</Typography>
-						<Typography>Total Games Played: {event.total}</Typography>
-					</CardContent>
-				</Card>
-			))}
 		</Box>
 	);
 };

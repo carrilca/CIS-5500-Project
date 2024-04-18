@@ -2,8 +2,8 @@ import { Card, CardContent, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import { useGetBasicPlayerInfo } from '../query';
 
-const PlayerCard = ({ playerId }) => {
-	const { player, isLoadingPlayer } = useGetBasicPlayerInfo(playerId);
+const PlayerCard = ({ event }) => {
+	const { player, isLoadingPlayer } = useGetBasicPlayerInfo(event.player_id);
 
 	if (isLoadingPlayer) {
 		return (
@@ -15,7 +15,27 @@ const PlayerCard = ({ playerId }) => {
 		);
 	}
 
-	if (!player) return null;
+	if (!player) {return (
+		<Card sx={{ maxWidth: 345, mb: 2 }}>
+					<CardContent>
+						<Typography variant='h6' component='div'>
+							{event.name}
+						</Typography>
+						<Typography variant='body2' color='textSecondary'>
+							Country: Unknown
+						</Typography>
+						<Typography variant='body2' color='textSecondary'>
+							Overall: Unknown
+						</Typography>
+						<Typography variant='body2' color='textSecondary'>
+							Club Jersey Number: Unknown
+						</Typography>
+						<Typography variant='body2' color='textSecondary'>
+							Year: Unknown
+						</Typography>
+					</CardContent>
+				</Card>
+	)};
 
 	return (
 		<>
