@@ -7,13 +7,12 @@ import {
 	TableHead,
 	TableRow,
 	Button,
-	CircularProgress,
 	TablePagination
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetRecentGames } from '../query';
+import React, { useEffect, useState } from "react";
 
 const GameList = ({ searchParams, onFieldUpdate  }) => {
 	const [page, setPage] = useState(0);
