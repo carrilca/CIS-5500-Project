@@ -72,7 +72,7 @@ const GameList = ({ searchParams, onFieldUpdate  }) => {
 							</TableCell>
 							<TableCell>{game.stadium}</TableCell>
 							<TableCell
-								onClick={() => onFieldUpdate(game.country)}
+								onClick={() => onFieldUpdate('country',game.country)}
 								style={{ cursor: 'pointer', textDecoration: 'underline', color: 'blue' }}>
 								{game.country}
 							</TableCell>
