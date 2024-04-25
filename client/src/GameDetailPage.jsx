@@ -17,6 +17,7 @@ import CropPortraitIcon from '@mui/icons-material/CropPortrait';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import banner from './assets/banner.jpeg'
 import './styles.css'
+import {Link} from 'react-router-dom';
 
 const GameDetailPage = () => {
 	const { gameId } = useParams();
@@ -48,7 +49,9 @@ const GameDetailPage = () => {
 	return (
 		<Card>
 			<div class="topnav">
-				<img src={logo} width="159" height="40"/>
+				<Link to="/">
+					<img src={logo} width="159" height="40"/>
+				</Link>
 			</div>
 			<CardContent>
 				<br></br>

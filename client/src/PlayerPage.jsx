@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { useGetDetailedPlayerInfo, useGetPlayerGameEvents } from './query';
 import logo from './assets/logo.png'
 import './styles.css'
+import {Link} from 'react-router-dom';
 
 const PlayerPage = () => {
 	const { playerId } = useParams();
@@ -46,7 +47,9 @@ const PlayerPage = () => {
 		<Box sx={{ width: '100%', typography: 'body1' }}>
 
 			<div class="topnav">
-				<img src={logo} width="159" height="40"/>
+				<Link to="/">
+					<img src={logo} width="159" height="40"/>
+				</Link>
 			</div>
 
 			<TabContext value={currentTab}>

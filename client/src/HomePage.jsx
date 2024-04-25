@@ -4,6 +4,7 @@ import GameList from './components/GameList';
 import Search from './components/Search';
 import './styles.css'
 import logo from './assets/logo.png'
+import {Link} from 'react-router-dom';
 
 const HomePage = () => {
 	const [searchParams, setSearchParams] = useState({
@@ -24,7 +25,9 @@ const HomePage = () => {
 	return (
 		<Container disableGutters maxWidth={true}>
 		<div class="topnav">
-			<img src={logo} width="159" height="40"/>
+			<Link to="/">
+				<img src={logo} width="159" height="40"/>
+			</Link>
 		</div>
 
 		<div class="bodyContent">
